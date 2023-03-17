@@ -1,5 +1,6 @@
 #define _POSIX_C_SOURCE 1
 #include <stdlib.h>
+#include "omp.h"
 
 const double PI = 3.14159265358979323846;
 const int n = 10000000; // 10 mil
@@ -26,8 +27,8 @@ int main () {
         unsigned int seed = omp_get_thread_num();
         #pragma omp for nowait
         for (int i = 0; i < n; i++) {
-            double x = getrand(&seed);         // x in [0, 1]
-            double y = getrand(&seed) * 7 - 2; // y in [2, 5]
+            double x = getrand(&seed) * 0.999998 + 0.000001;     // x in (0, 1)
+            double y = getrand(&seed) * 2.999998 + 0.000001 + 2; // y in (2, 5)
             if (y <= sin(x)) {
                 in_loc++;
                 s_loc += func(x, y);
