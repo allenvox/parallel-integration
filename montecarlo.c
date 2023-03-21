@@ -7,7 +7,7 @@
 const double PI = 3.14159265358979323846;
 const int n = 10000000; // 10 mil
 
-// variant 1
+// variant 1: y = x/(y^2); x = (0,1); y = (2,5);
 double func(double x) {
     return pow(x, 0.3333333);
 }
