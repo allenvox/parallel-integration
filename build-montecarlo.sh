@@ -1,1 +1,1 @@
-gcc -fopenmp -o montecarlo montecarlo.c
+gcc -fopenmp -o montecarlo montecarlo.c -lm
