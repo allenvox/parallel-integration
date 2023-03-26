@@ -22,7 +22,7 @@ int main () {
 
     int in = 0;
     double s = 0.0;
-    #pragma omp parallel num_threads(4)
+    #pragma omp parallel num_threads(2)
     {
         double s_loc = 0;
         int in_loc = 0;

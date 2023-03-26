@@ -13,7 +13,7 @@ int main() {
     const int n0 = 1000000;
     printf("Numerical integration: [%f, %f], n0 = %d, EPS = %f\n", a, b, n0, eps);
     double sq[2];
-    #pragma omp parallel num_threads(4)
+    #pragma omp parallel num_threads(2)
     {
         int n = n0, k;
         double delta = 1;
