@@ -7,9 +7,9 @@
 const double PI = 3.14159265358979323846;
 const int n = 10000000; // 10 mil
 
-// variant 1: y = x/(y^2); x = (0,1); y = (2,5);
-double func(double x) {
-    return pow(x, 0.3333333);
+// variant 1: y = x / (y ^ 2); x = [0, 1]; y = [2, 5];
+double func(double x, double y) {
+    return x / (y * y);
 }
 
 double getrand(unsigned int *seed) {
@@ -17,23 +17,22 @@ double getrand(unsigned int *seed) {
 }
 
 int main () {
-    const int n = 10000000;
     printf("Numerical integration using Monte-Carlo method\nn = %d\n", n);
-
     int in = 0;
     double s = 0.0;
-    #pragma omp parallel num_threads(2)
+    double t = omp_get_wtime();
+    #pragma omp parallel num_threads(1) // 1 - serial, 2... - multithreaded
     {
         double s_loc = 0;
         int in_loc = 0;
         unsigned int seed = omp_get_thread_num();
         #pragma omp for nowait
         for (int i = 0; i < n; i++) {
-            double x = getrand(&seed);     // x in (0, 1)
-            double y = getrand(&seed) * 7.0001 - 2.0002; // y in (2, 5)
-            if (y <= func(x)) {
+            double x = getrand(&seed);         // x in [0, 1]
+            double y = getrand(&seed) * 7 - 2; // y in [2, 5]
+            if (y <= func(x, y)) {
                 in_loc++;
-                s_loc += func(x);
+                s_loc += func(x, y);
             }
         }
         #pragma omp atomic
@@ -41,8 +40,9 @@ int main () {
         #pragma omp atomic
         in += in_loc;
     }
-    double v = 5 - 2 - 0.0002; // b - a
+    double v = 3; // b - a
     double res = v * s / in;
-    printf("Result: %.12f\n", res);
+    t = omp_get_wtime() - t;
+    printf("Result: %.12f\nElapsed time: %.12f\n", res, t);
     return 0;
 }
