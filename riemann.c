@@ -13,7 +13,7 @@ int main() {
     const int n0 = 1000000;
     printf("Numerical integration: [%f, %f], n0 = %d, EPS = %f\n", a, b, n0, eps);
     double sq[2];
-    #pragma omp parallel num_threads(2)
+    #pragma omp parallel num_threads(1) // 1 - serial, 2 ... multithreaded
     {
         int n = n0, k;
         double delta = 1;
@@ -34,12 +34,12 @@ int main() {
             if (n > n0) {
                 delta = fabs(sq[k] - sq[k ^ 1]) / 3.0;
             }
-            #if 1
+            #if 0
             printf("n=%d i=%d sq=%.12f delta=%.12f\n", n, k, sq[k], delta);
             #endif
         }
         #pragma omp master
-        printf("Result Pi: %.12f; Runge rule: EPS = %.1e, n = %d\n", sq[k] * sq[k], eps, n / 2);
+        printf("Result: %.12f; Runge rule: EPS = %.1e, n = %d\n", sq[k] * sq[k], eps, n / 2);
     }
     t = omp_get_wtime() - t;
     printf("Elapsed time (sec.): %.6f\n", t);
